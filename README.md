@@ -1,7 +1,7 @@
 npm install
 
 ### Enable calendar in googleapis developer portal
-### Download credentials file from google dev portal
+### Download credentials file from google dev portal and save at root as credentials.json
 ![Download Credentials](SS.png)
 
 node fetchMyCalendarEvents.js
