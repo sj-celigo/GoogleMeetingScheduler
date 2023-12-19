@@ -6,7 +6,7 @@ const { getEvents } = require('./googleCalendarUtil');
 const openaiKey = process.env.OPENAI_API_KEY; // Get OpenAI API key from environment variables
 const client = new OpenAI({ api_key: openaiKey });
 
-let assistant, myThread;
+let assistant = {id: 'asst_TJSkXgVOD7rIRPYEz4G3ipSt'}, myThread;
 
 async function createAssistant(client) {
   const assistantConfig = {
@@ -16,7 +16,9 @@ async function createAssistant(client) {
       This assistant takes instructions to schedule a meeting between multiple employees in your organization. 
       It will fetch public calendar events of each employee along with start and end time and will schedule the meeting according to availability.
       Only suggest time which is available to all participants.`,
-    tools: [{
+    tools: [
+      {type: "code_interpreter"},
+      {
       type: "function",
       function: {
         name: "getCalendarEvents",
@@ -40,7 +42,7 @@ async function createAssistant(client) {
 
 async function initialize() {
   if (!assistant) {
-    assistant = await createAssistant(client);
+    // assistant = await createAssistant(client);
   }
 
   if (!myThread) {
@@ -55,7 +57,7 @@ async function runAssistant(question) {
 
   const runConfig = {
     assistant_id: assistant.id,
-    instructions: `Address the user as SJ. Email id is 'saurabh.jain@celigo.com', Today is 2023-12-03T19:40:00+05:30}. working hours are 10:00 AM to 07:30 PM.`,
+    instructions: `Address the user as SJ. Email id is 'saurabh.jain@celigo.com', Today is ${new Date().toLocaleDateString()}T00:00:00+05:30}. working hours are 10:00 AM to 07:30 PM.`,
   };
 
   const myRun = await client.beta.threads.runs.create(myThread.id, runConfig);
